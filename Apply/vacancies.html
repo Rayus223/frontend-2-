@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+     <link rel="icon" href="/image/favicon.ico" type="image/x-icon">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXKBVVB6PF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-DXKBVVB6PF');
+    </script>
+
+
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Vacancies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module">
+        import { config } from '../config.js';
+        window.API_BASE_URL = config.API_BASE_URL;
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            
+            background:  #2A9D8F;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #1e4d92;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #1e4d92;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #153a6f;
+        }
+
+        /* Vacancies Section */
+        .vacancies-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: #1e4d92;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vacancies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .vacancy-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .vacancy-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .vacancy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .vacancy-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e4d92;
+        }
+
+        .vacancy-subject {
+            background: #e8f4ff;
+            color: #1e4d92;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .vacancy-meta {
+            margin: 10px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .applicant-count {
+            background: #e8f4ff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            color: #1e4d92;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .location-section {
+            margin: 10px 0;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .location-section i {
+            color: #1e4d92;
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        .requirements-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .requirements-section h4 {
+            color: #1e4d92;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .requirements-section i {
+            margin-right: 8px;
+        }
+
+        .salary-section {
+            margin: 15px 0;
+            color: #2d8a2d;
+            font-weight: 600;
+        }
+
+        .salary-section i {
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .apply-btn {
+            flex: 3;
+            background: #1e4d92;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .apply-btn:hover {
+            background: #153a6f;
+        }
+
+        .share-btn {
+            flex: 1;
+            background: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .share-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Confirmation Modal Styles */
+        .swal2-popup {
+            font-size: 16px;
+        }
+
+        .vacancy-detail-popup {
+            text-align: left;
+            padding: 20px;
+        }
+
+        .vacancy-detail-popup h3 {
+            color: #1e4d92;
+            margin-bottom: 15px;
+        }
+
+        .vacancy-detail-popup .detail-section {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .vacancy-detail-popup .detail-section:last-child {
+            border-bottom: none;
+        }
+
+        .vacancy-detail-popup i {
+            width: 20px;
+            color: #1e4d92;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #dc3545;
+        }
+
+        .time-section, .class-section {
+            margin: 10px 0;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .time-section i, .class-section i {
+            color: #1e4d92;
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .vacancies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-brand">Available Vacancies</div>
+            <div class="nav-links">
+                <a href="teacherProfile.html" class="nav-btn">
+                    <i class="fas fa-user"></i> Back to Profile
+                </a>
+                <button onclick="logout()" class="nav-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="vacancies-section">
+            <h2 class="section-title">
+                <i class="fas fa-briefcase"></i> Current Openings
+            </h2>
+            <div id="vacanciesList" class="vacancies-grid">
+                <!-- Vacancies will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        window.onload = async function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'teacher.html';
+                return;
+            }
+
+            // Check if token is expired
+            try {
+                // Parse the token payload
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const expTime = payload.exp * 1000; // Convert to milliseconds
+                const currentTime = Date.now();
+                
+                console.log('Token expiration:', new Date(expTime));
+                console.log('Current time:', new Date(currentTime));
+                
+                // If token is expired or about to expire (less than 5 minutes left)
+                if (currentTime >= expTime - 300000) {
+                    console.log('Token expired or about to expire, refreshing...');
+                    const refreshed = await refreshToken();
+                    if (!refreshed) {
+                        // If refresh fails, redirect to login
+                        window.location.href = 'teacher.html';
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Error parsing token:', error);
+                // If we can't parse the token, assume it's invalid and redirect
+                window.location.href = 'teacher.html';
+                return;
+            }
+            
+            loadVacancies();
+        };
+
+        // Function to refresh the token
+        async function refreshToken() {
+            try {
+                const oldToken = localStorage.getItem('token');
+                if (!oldToken) return false;
+                
+                const response = await fetch(`${window.API_BASE_URL}/api/teacher-apply/refresh-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${oldToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to refresh token');
+                }
+                
+                const result = await response.json();
+                if (result.success && result.token) {
+                    // Save the new token
+                    localStorage.setItem('token', result.token);
+                    console.log('Token refreshed successfully');
+                    return true;
+                } else {
+                    throw new Error(result.message || 'Token refresh failed');
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                // Clear the invalid token
+                localStorage.removeItem('token');
+                return false;
+            }
+        }
+
+        function shouldDisplayVacancy(vacancy) {
+            if (!vacancy) return false;
+            const applications = vacancy.applications || [];
+            return applications.length < 5;
+        }
+
+        // Update the loadVacancies function
+        async function loadVacancies() {
+            const token = localStorage.getItem('token');
+            try {
+                // Get teacher ID from JWT token
+                const teacherId = JSON.parse(atob(token.split('.')[1])).id;
+                console.log('Current teacher ID from token:', teacherId);
+                
+                if (!teacherId) {
+                    throw new Error('No teacher ID found in token');
+                }
+
+                // Fetch vacancies
+                let response = await fetch(`${window.API_BASE_URL}/api/vacancies`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Handle token expiration
+                if (response.status === 401) {
+                    console.log('Token expired during vacancies fetch, attempting refresh...');
+                    const refreshed = await refreshToken();
+                    if (!refreshed) {
+                        throw new Error('Your session has expired. Please log in again.');
+                    }
+                    
+                    // Retry with new token
+                    const newToken = localStorage.getItem('token');
+                    response = await fetch(`${window.API_BASE_URL}/api/vacancies`, {
+                        headers: {
+                            'Authorization': `Bearer ${newToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+
+                if (!response.ok) throw new Error('Failed to fetch vacancies');
+
+                const result = await response.json();
+                console.log('Vacancies response:', result);
+                
+                if (!result.success && !Array.isArray(result)) {
+                    throw new Error('Invalid data format received');
+                }
+
+                const vacanciesList = document.getElementById('vacanciesList');
+                let vacancies = result.data || result;
+                
+                // Filter out vacancies where the teacher has already applied
+                vacancies = vacancies.filter(vacancy => {
+                    const applications = vacancy.applications || [];
+                    return !applications.some(app => {
+                        const applicationTeacherId = app.teacher?._id || app.teacher;
+                        console.log('Comparing:', {
+                            applicationTeacherId,
+                            currentTeacherId: teacherId,
+                            isMatch: applicationTeacherId === teacherId
+                        });
+                        return applicationTeacherId === teacherId;
+                    });
+                });
+
+                console.log('Filtered Vacancies:', vacancies);
+
+                if (vacancies.length === 0) {
+                    vacanciesList.innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-info-circle"></i>
+                            <p>No available vacancies at the moment.</p>
+                        </div>`;
+                    return;
+                }
+
+                vacanciesList.innerHTML = '';
+
+                vacancies.forEach(vacancy => {
+                    const applications = vacancy.applications || [];
+                    const card = document.createElement('div');
+                    card.className = 'vacancy-card';
+                    card.innerHTML = `
+                        <div class="vacancy-header">
+                            <span class="vacancy-title">${vacancy.title || 'Untitled'}</span>
+                            <span class="vacancy-subject">${vacancy.subject || 'Subject not specified'}</span>
+                        </div>
+                        <div class="vacancy-meta">
+                            <span class="applicant-count">
+                                <i class="fas fa-users"></i> ${applications.length}/5 Applicants
+                            </span>
+                        </div>
+                        <div class="location-section">
+                            <i class="fas fa-map-marker-alt"></i> ${vacancy.location || 'Location not specified'}
+                        </div>
+                        <div class="time-section">
+                            <i class="fas fa-clock"></i> ${vacancy.time || 'Time not specified'}
+                        </div>
+                        <div class="class-section">
+                            <i class="fas fa-graduation-cap"></i> Class ${vacancy.class || 'not specified'}
+                        </div>
+                        <div class="salary-section">
+                            <i class="fas fa-money-bill-wave"></i> Rs. ${vacancy.salary || 'Not specified'}
+                        </div>
+                        <div class="action-buttons">
+                            <button onclick="applyForVacancy('${vacancy._id}')" class="apply-btn" ${applications.length >= 5 ? 'disabled' : ''}>
+                                <i class="fas fa-paper-plane"></i> Apply Now
+                            </button>
+                            <button onclick="shareVacancy('${vacancy._id}', '${encodeURIComponent(vacancy.title || 'Untitled')}')" class="share-btn">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    `;
+                    vacanciesList.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading vacancies:', error);
+                
+                // If it's an auth error and there's a specific message about session expiration, handle logout
+                if (error.message.includes('session') || error.message.includes('expire')) {
+                    Swal.fire({
+                        title: 'Session Expired',
+                        text: 'Your session has expired. Please log in again.',
+                        icon: 'warning',
+                        confirmButtonText: 'Log In'
+                    }).then(() => {
+                        localStorage.removeItem('token');
+                        window.location.href = 'teacher.html';
+                    });
+                    return;
+                }
+                
+                document.getElementById('vacanciesList').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading vacancies. Please try again later.</p>
+                        <small>${error.message}</small>
+                    </div>`;
+            }
+        }
+
+
+        async function applyForVacancy(vacancyId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${window.API_BASE_URL}/api/vacancies/${vacancyId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                // Check if token has expired
+                if (response.status === 401) {
+                    console.log('Token expired during vacancy fetch, attempting refresh...');
+                    const refreshed = await refreshToken();
+                    if (!refreshed) {
+                        throw new Error('Your session has expired. Please log in again.');
+                    }
+                    // Retry with new token
+                    const newToken = localStorage.getItem('token');
+                    const retryResponse = await fetch(`${window.API_BASE_URL}/api/vacancies/${vacancyId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${newToken}`
+                        }
+                    });
+                    if (!retryResponse.ok) throw new Error('Failed to fetch vacancy details after token refresh');
+                    const result = await retryResponse.json();
+                    console.log('Single vacancy response after token refresh:', result);
+                    var vacancy = result.data || result;
+                } else {
+                    if (!response.ok) throw new Error('Failed to fetch vacancy details');
+                    const result = await response.json();
+                    console.log('Single vacancy response:', result); // Debug log
+                    var vacancy = result.data || result;
+                }
+                
+                console.log('Vacancy details:', vacancy); // Debug log
+
+                // Show confirmation popup with full details
+                const confirmed = await Swal.fire({
+                    title: 'Vacancy Details',
+                    html: `
+                        <div class="vacancy-detail-popup">
+                            <div class="detail-section">
+                                <h3>${vacancy.title || 'Untitled'}</h3>
+                                <p><i class="fas fa-book"></i> Subject: ${vacancy.subject || 'Not specified'}</p>
+                                <p><i class="fas fa-users"></i> ${vacancy.applications?.length || 0}/5 Applicants</p>
+                            </div>
+                            <div class="detail-section">
+                                <p><i class="fas fa-map-marker-alt"></i> Location: ${vacancy.location || 'Not specified'}</p>
+                                <p><i class="fas fa-clock"></i> Time: ${vacancy.time || 'Not specified'}</p>
+                                <p><i class="fas fa-graduation-cap"></i> Class: ${vacancy.class || 'Not specified'}</p>
+                            </div>
+                            <div class="detail-section">
+                                <p><i class="fas fa-align-left"></i> Description: ${vacancy.description || 'Experienced teacher with required qualification are requested to apply'}</p>
+                            </div>
+                            <div class="detail-section">
+                                <p><i class="fas fa-money-bill-wave"></i> Salary: Rs. ${vacancy.salary || 'Not specified'}</p>
+                            </div>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Apply Now',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#1e4d92',
+                    width: '600px'
+                });
+
+                if (confirmed.isConfirmed) {
+                    // Get the current token (which might have been refreshed)
+                    const currentToken = localStorage.getItem('token');
+                    
+                    // Submit application
+                    const applyResponse = await fetch(`${window.API_BASE_URL}/api/teacher-apply/apply-vacancy/${vacancyId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    // Handle token expiration during application submission
+                    if (applyResponse.status === 401) {
+                        console.log('Token expired during application submission, attempting refresh...');
+                        const refreshed = await refreshToken();
+                        if (!refreshed) {
+                            throw new Error('Your session has expired. Please log in again.');
+                        }
+                        
+                        // Retry with new token
+                        const newToken = localStorage.getItem('token');
+                        const retryApplyResponse = await fetch(`${window.API_BASE_URL}/api/teacher-apply/apply-vacancy/${vacancyId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${newToken}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (!retryApplyResponse.ok) {
+                            const errorData = await retryApplyResponse.json();
+                            throw new Error(errorData.message || 'Failed to submit application after token refresh');
+                        }
+                        
+                        const retryResult = await retryApplyResponse.json();
+                        console.log('Apply response after token refresh:', retryResult);
+                        
+                        if (retryResult.success) {
+                            await Swal.fire({
+                                title: 'Success!',
+                                text: 'Application submitted successfully!',
+                                icon: 'success'
+                            });
+                            loadVacancies(); // Refresh the list
+                        } else {
+                            throw new Error(retryResult.message || 'Failed to submit application');
+                        }
+                    } else {
+                        const result = await applyResponse.json();
+                        console.log('Apply response:', result); // Debug log
+                        
+                        if (result.success) {
+                            await Swal.fire({
+                                title: 'Success!',
+                                text: 'Application submitted successfully!',
+                                icon: 'success'
+                            });
+                            loadVacancies(); // Refresh the list
+                        } else {
+                            throw new Error(result.message || 'Failed to submit application');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.message || 'Failed to submit application',
+                    icon: 'error'
+                });
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'teacher.html';
+        }
+
+        // Add the shareVacancy function
+        function shareVacancy(vacancyId, vacancyTitle) {
+            try {
+                // Create share URL with fallback for origin
+                const origin = window.location.origin || 'http://localhost';
+                const shareUrl = `${origin}/Apply/vacancy.html?id=${vacancyId}`;
+                
+                // Log for debugging
+                console.log('Sharing vacancy:', { 
+                    id: vacancyId, 
+                    title: decodeURIComponent(vacancyTitle),
+                    url: shareUrl 
+                });
+                
+                // Check if Web Share API is available
+                if (navigator.share) {
+                    navigator.share({
+                        title: `${decodeURIComponent(vacancyTitle)} - Dear Sir Home Tuition`,
+                        text: `Check out this vacancy for ${decodeURIComponent(vacancyTitle)} at Dear Sir Home Tuition!`,
+                        url: shareUrl
+                    })
+                    .then(() => console.log('Share successful'))
+                    .catch((error) => console.log('Error sharing', error));
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    // Create a temporary input to copy the URL
+                    const tempInput = document.createElement('input');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = shareUrl;
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    
+                    // Show notification using SweetAlert
+                    Swal.fire({
+                        title: 'Link Copied!',
+                        text: 'Share it with your friends or colleagues',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (error) {
+                console.error('Error in shareVacancy:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to share vacancy. Please try again.',
+                    icon: 'error'
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching Opportunity - Dear Sir Home Tuition</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DXKBVVB6PF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-DXKBVVB6PF');
+    </script>
+    
+    <!-- Meta tags for SEO and sharing -->
+    <meta name="description" content="View this teaching opportunity at Dear Sir Home Tuition">
+    <meta property="og:title" content="Teaching Opportunity - Dear Sir Home Tuition">
+    <meta property="og:description" content="Check out this teaching vacancy at Dear Sir Home Tuition">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="/frontend1/assets/img/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/frontend1/assets/img/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/frontend1/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd/dist/antd.min.css">
+    
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Axios for API requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <!-- Moment.js for date formatting -->
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    
+    <style>
+        /* Shared Vacancy Specific Styles */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #1e4d92;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .branding-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .branding-header img {
+            height: 50px;
+            margin-right: 1rem;
+        }
+        
+        .branding-header h2 {
+            margin: 0;
+            color: #1e4d92;
+            font-weight: 600;
+        }
+        
+        /* React container */
+        #react-shared-vacancy {
+            margin-top: 20px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .branding-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .branding-header img {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Branding Header -->
+    <header class="branding-header">
+        <img src="/frontend1/assets/img/logo.png" alt="Dear Sir Home Tuition Logo">
+        <h2>Dear Sir Home Tuition</h2>
+    </header>
+
+    <div class="container">
+        <!-- React App Mount Point -->
+        <div id="react-shared-vacancy"></div>
+    </div>
+    
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <img src="/frontend1/assets/img/logo.png" alt="Dear Sir Home Tuition" height="40" class="mb-3">
+            <p>© 2023 Dear Sir Home Tuition. All rights reserved.</p>
+            <div class="mt-3">
+                <a href="/frontend1/index.html" class="text-white mx-2">Home</a>
+                <a href="/frontend1/about.html" class="text-white mx-2">About Us</a>
+                <a href="/frontend1/contact.html" class="text-white mx-2">Contact</a>
+                <a href="/frontend1/Apply/tutor-login.html" class="text-white mx-2">Tutor Login</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- React Component for Shared Vacancy -->
+    <script type="text/babel">
+        // API Configuration
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : '';
+    
+        // API Service
+        const getVacancyById = async (id) => {
+            try {
+                console.log(`Fetching vacancy with ID: ${id}`);
+                const response = await axios.get(`${API_URL}/api/vacancy/${id}`);
+                
+                if (!response.data || response.data.success === false) {
+                    console.error('Failed to fetch vacancy:', response.data?.message || 'Unknown error');
+                    throw new Error(response.data?.message || 'Failed to fetch vacancy');
+                }
+                
+                console.log('Vacancy data received:', response.data);
+                return response.data.data;
+            } catch (error) {
+                console.error('Error fetching vacancy:', error);
+                throw new Error(`Failed to fetch vacancy: ${error.message}`);
+            }
+        };
+        
+        // Create React components
+        const { useState, useEffect } = React;
+        const { Card, Typography, Divider, Tag, Spin, Alert } = antd;
+        const { Title, Text, Paragraph } = Typography;
+        
+        const SharedVacancy = () => {
+            // Get vacancy ID from URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            
+            const [vacancy, setVacancy] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+            
+            useEffect(() => {
+                async function fetchVacancy() {
+                    try {
+                        setLoading(true);
+                        const data = await getVacancyById(id);
+                        setVacancy(data);
+                        setError(null);
+                        
+                        // Update page metadata
+                        if (data) {
+                            document.title = `${data.title} - Dear Sir Home Tuition`;
+                            document.querySelector('meta[name="description"]').setAttribute(
+                                'content', 
+                                `${data.title} - ${data.subject} teaching opportunity at Dear Sir Home Tuition`
+                            );
+                        }
+                    } catch (err) {
+                        console.error('Error fetching vacancy:', err);
+                        setError(err.message || 'Failed to load vacancy');
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+                
+                if (id) {
+                    fetchVacancy();
+                } else {
+                    setError('No vacancy ID provided');
+                    setLoading(false);
+                }
+            }, [id]);
+            
+            if (loading) {
+                return (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                        <Spin size="large" tip="Loading vacancy..." />
+                    </div>
+                );
+            }
+            
+            if (error) {
+                return (
+                    <div style={{ padding: '20px' }}>
+                        <Alert
+                            type="error"
+                            message="Error"
+                            description={error}
+                            showIcon
+                        />
+                    </div>
+                );
+            }
+            
+            if (!vacancy) {
+                return (
+                    <div style={{ padding: '20px' }}>
+                        <Alert
+                            type="warning"
+                            message="Vacancy Not Found"
+                            description="The requested vacancy could not be found."
+                            showIcon
+                        />
+                    </div>
+                );
+            }
+            
+            const handleApply = () => {
+                window.location.href = `/frontend1/Apply/tutor-register.html?vacancy=${id}`;
+            };
+            
+            const handleShare = () => {
+                // Use the existing share functionality
+                if (window.shareVacancy && vacancy) {
+                    window.shareVacancy(vacancy);
+                } else {
+                    // Fallback sharing
+                    if (navigator.share) {
+                        navigator.share({
+                            title: `${vacancy.title} - Teaching Opportunity`,
+                            text: `Check out this teaching position: ${vacancy.title} for ${vacancy.subject}`,
+                            url: window.location.href
+                        });
+                    } else {
+                        // Copy to clipboard
+                        navigator.clipboard.writeText(window.location.href)
+                            .then(() => alert('Link copied to clipboard!'))
+                            .catch(err => console.error('Could not copy link: ', err));
+                    }
+                }
+            };
+            
+            return (
+                <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+                    <Card>
+                        <Title level={2}>{vacancy.title}</Title>
+                        <div style={{ marginBottom: '16px' }}>
+                            <Tag color="blue">{vacancy.subject}</Tag>
+                            <Tag color={vacancy.status === 'open' ? 'green' : 'red'}>
+                                {vacancy.status}
+                            </Tag>
+                            {vacancy.featured && <Tag color="gold">Featured</Tag>}
+                        </div>
+                        
+                        <Divider orientation="left">Description</Divider>
+                        <Paragraph>{vacancy.description}</Paragraph>
+                        
+                        <Divider orientation="left">Requirements</Divider>
+                        <Paragraph>{vacancy.requirements}</Paragraph>
+                        
+                        <Divider orientation="left">Salary</Divider>
+                        <Paragraph>₹{vacancy.salary}</Paragraph>
+                        
+                        <Divider />
+                        <Text type="secondary">
+                            Posted: {moment(vacancy.createdAt).format('MMMM Do, YYYY')}
+                        </Text>
+                        
+                        <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
+                            {vacancy.status === 'open' ? (
+                                <button 
+                                    onClick={handleApply}
+                                    className="btn btn-primary"
+                                    style={{ flex: 1 }}
+                                >
+                                    <i className="fas fa-paper-plane me-2"></i>
+                                    Apply Now
+                                </button>
+                            ) : (
+                                <button 
+                                    className="btn btn-secondary" 
+                                    disabled 
+                                    style={{ flex: 1 }}
+                                >
+                                    <i className="fas fa-times-circle me-2"></i>
+                                    Position Closed
+                                </button>
+                            )}
+                            
+                            <button 
+                                onClick={handleShare}
+                                className="btn btn-outline-primary"
+                            >
+                                <i className="fas fa-share-alt me-2"></i>
+                                Share
+                            </button>
+                        </div>
+                    </Card>
+                </div>
+            );
+        };
+        
+        // Render the component
+        const root = ReactDOM.createRoot(document.getElementById('react-shared-vacancy'));
+        root.render(<SharedVacancy />);
+    </script>
+</body>
+</html> 
